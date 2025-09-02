@@ -1,0 +1,39 @@
+УЛУЧШЕНИЯ КОДА:
+
+1. ПРОИЗВОДИТЕЛЬНОСТЬ:
+   - Заменить float на фиксированную арифметику для критичных вычислений
+   - Кешировать часто используемые значения (ADC_GAIN * DIVIDER)
+   - Использовать битовые операции для constrain()
+
+2. ПАМЯТЬ:
+   - Убрать дублирование строк с F() макросом
+   - Оптимизировать размер буфера voltageBuffer
+
+3. НАДЕЖНОСТЬ:
+   - Добавить проверки диапазонов для delayTicks
+   - Защита от деления на ноль в интерполяции
+   - Таймаут для защиты от зависания
+
+4. КОД:
+   - Вынести магические числа в константы
+   - Упростить условия в адаптивном KP
+   - Использовать enum для I_idx
+
+КОНКРЕТНЫЕ ИЗМЕНЕНИЯ:
+
+// Константы вместо магических чисел
+#define MIN_DELAY_TICKS 10
+#define MAX_DELAY_TICKS 900
+#define ERROR_THRESHOLD_HIGH 0.05f
+#define ERROR_THRESHOLD_MED 0.02f
+#define ERROR_THRESHOLD_LOW 0.005f
+
+// Кеширование
+const float ADC_SCALE = ADC_GAIN * DIVIDER;
+
+// Оптимизация constrain
+delayTicks = (delayTicks < MIN_DELAY_TICKS) ? MIN_DELAY_TICKS : 
+             (delayTicks > MAX_DELAY_TICKS) ? MAX_DELAY_TICKS : delayTicks;
+
+// Enum для индексов тока
+enum CurrentIndex { LOW_CURRENT = 0, MED_CURRENT = 1, HIGH_CURRENT = 2 };
